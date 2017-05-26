@@ -1530,4 +1530,45 @@ cvAdaptiveThreshold( const void *srcIm, void *dstIm, double maxValue,
     cv::adaptiveThreshold( src, dst, maxValue, method, type, blockSize, delta );
 }
 
+
+
+void cv::magnitudeThreshold( InputArray _dx, InputArray _dy,
+    OutputArray _dst, double threshold, double minValue, double maxValue )
+{
+    Mat dx = _dx.getMat();
+    Mat dy = _dy.getMat();
+    CV_Assert( dx.type() == CV_16SC1 );
+    CV_Assert( dy.type() == CV_16SC1 );
+
+    Size size = dx.size();
+    _dst.create( size, CV_8UC1 );
+    Mat dst = _dst.getMat();
+
+    //  convert the parameters to uint / uchar
+    int sqThresh = threshold * threshold;
+    uchar minV = minValue;
+    uchar maxV = maxValue;
+
+    //  walk the array, thresholding
+    int i, j;
+    for( i = 0; i < size.height; i++ )
+    {
+        const short* pdx = dx.ptr<short>( i );
+        const short* pdy = dy.ptr<short>( i );
+        uchar* ddata = dst.ptr( i );
+
+        for( j = 0; j < size.width; j++ )
+        {
+            int ddx = pdx[j];
+            int ddy = pdy[j];
+            ddata[j] = ( ( ddx*ddx + ddy*ddy ) > sqThresh ) ? maxV : minV;
+        }
+    }
+}
+
+
+
+
+
+
 /* End of file. */

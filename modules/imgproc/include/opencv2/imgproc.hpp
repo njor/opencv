@@ -2787,6 +2787,23 @@ CV_EXPORTS_W void adaptiveThreshold( InputArray src, OutputArray dst,
                                      double maxValue, int adaptiveMethod,
                                      int thresholdType, int blockSize, double C );
 
+
+/** @brief Applies a threshold to the magnitude of the horizontal and vertical gradients provided.
+
+The total magnitude will be computed as if doing (for each point):
+    sqrt(dx*dx+dy*dy).
+
+@param dx input array (single-channel, 16-bit integer).
+@param dy input array (single-channel, 16-bit integer).
+@param dst output array of the same size as src, of type CV_8UC1.
+@param thresh threshold value.
+@param minValue value to use for pixels where the magnitude <= thresh
+@param maxValue value to use for pixels where the magnitude > thresh
+ */
+CV_EXPORTS_W void magnitudeThreshold( InputArray dx, InputArray dy,
+                                    OutputArray dst, double thresh, double minValue, double maxValue );
+
+
 //! @} imgproc_misc
 
 //! @addtogroup imgproc_filter
